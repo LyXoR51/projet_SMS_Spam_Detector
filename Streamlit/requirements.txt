@@ -1,0 +1,10 @@
+streamlit==1.37.1
+sqlalchemy
+tiktoken
+mlflow
+numpy
+pandas
+dotenv
+psycopg2-binary
+torch
+boto3
