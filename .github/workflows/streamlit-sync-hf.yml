@@ -1,0 +1,32 @@
+name: Streamlit - Sync to Hugging Face
+on:
+  push:
+    paths:
+      - '02_Streamlit/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Push to Hugging Face
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          mkdir tmp
+          cp -r 02_Streamlit/* tmp/
+          cd tmp
+
+          git init
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+          git add .
+          git commit -m "Deploy to Hugging Face"
+
+          git branch -m master main
+
+          git remote add hf "https://lyx51:${HF_TOKEN}@huggingface.co/spaces/lyx51/SMS-Spam-Detector-Streamlit"
+          git fetch hf
+          git push hf main:main --force
