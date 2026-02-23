@@ -8,5 +8,5 @@ app_port: 8501
 tags:
 - streamlit
 pinned: false
-short_description: 'SMS Spam Detector with real-time predictions and feedback'
+short_description: 'SMS Spam Detector with real-time predictions and feedback !'
 ---
