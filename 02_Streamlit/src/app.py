@@ -1,3 +1,11 @@
+# GCP CREDENTIAL for HF SPACE
+import os
+if "GCP_KEY" in os.environ:
+    with open("/tmp/gcp_key.json", "w") as f:
+        f.write(os.environ["GCP_KEY"])
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/tmp/gcp_key.json"
+
+
 #####   LIBRARY  #####
 from sqlalchemy import create_engine, text
 import streamlit as st
@@ -7,7 +15,6 @@ import tiktoken
 import pandas as pd
 import requests
 import json
-import os
 import mlflow
 import numpy as np
 import pandas as pd
