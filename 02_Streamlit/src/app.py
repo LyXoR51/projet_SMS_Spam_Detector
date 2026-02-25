@@ -25,8 +25,10 @@ st.set_page_config(layout="wide")
 #####   DATA & VARIABLE  #####
 POSTGRES_DATABASE = os.getenv("POSTGRES_DATABASE")
 ENGINE = create_engine(POSTGRES_DATABASE, echo=True)
-TABLE_NAME = 'messages_spam_detector'
+TABLE = 'messages_spam_detector'
+ID = 'id'
 MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI")
+
 
 
 #####  MLFLOW SERVER  #######
@@ -61,9 +63,13 @@ def update_db(user_input, predict_label, label):
         "created_at": int(datetime.timestamp(datetime.now()) * 1000)
     }])
     try:
-        data.to_sql(name=TABLE_NAME, con=ENGINE, index=False, if_exists="append")
+        with ENGINE.connect() as con:
+            result = con.execute(text(f'SELECT COALESCE(MAX({ID}), 0) FROM {TABLE}'))
+            data[ID] = result.scalar() + 1
+            data.to_sql(name=TABLE, con=ENGINE, index=False, if_exists="append")
     except Exception as e:
         print("DB update error:", e)
+        raise
 
 @st.dialog("Model prediction")
 def ask_feedback(user_input, predict_label):
@@ -118,9 +124,9 @@ This section also includes the original training dataset, allowing you to compar
         with ENGINE.connect() as conn:
             stmt = text(f"""
                 SELECT * 
-                FROM {TABLE_NAME}
+                FROM {TABLE}
                 WHERE label_predict IS NOT NULL
-                ORDER BY id DESC 
+                ORDER BY {ID} DESC 
     """)       
             result = conn.execute(stmt)
             df = pd.DataFrame(result.fetchall(), columns=result.keys())
@@ -132,8 +138,8 @@ This section also includes the original training dataset, allowing you to compar
         with ENGINE.connect() as conn:
             stmt = text(f"""
                 SELECT * 
-                FROM {TABLE_NAME}
-                ORDER BY id DESC  
+                FROM {TABLE}
+                ORDER BY {ID} DESC  
     """)
             result = conn.execute(stmt)
             df = pd.DataFrame(result.fetchall(), columns=result.keys())
