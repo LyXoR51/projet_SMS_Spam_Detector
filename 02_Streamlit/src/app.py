@@ -18,7 +18,6 @@ import json
 import mlflow
 import numpy as np
 import pandas as pd
-from PIL import Image
 
 
 st.set_page_config(layout="wide")
@@ -146,14 +145,6 @@ with st.expander("**ML Workflow**"):
     st.markdown("""    
                 
     This project follows a complete MLOps lifecycle — from data preparation to model deployment and continuous improvement.""")
-
-    image_path = os.path.join(os.path.dirname(__file__), "mlworkflow.png")
-
-    if os.path.exists(image_path):
-        image = Image.open(image_path)
-        st.image(image)
-    else:
-        st.error("Image not found.")
 
     st.image(os.path.join(os.path.dirname(__file__), "mlworkflow.png"))
     st.markdown("""
