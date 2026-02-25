@@ -146,7 +146,10 @@ with st.expander("**ML Workflow**"):
                 
     This project follows a complete MLOps lifecycle — from data preparation to model deployment and continuous improvement.""")
 
-    st.image(os.path.join(os.path.dirname(__file__), "mlworkflow.png"))
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    image_path = os.path.join(BASE_DIR, "images", "mlworkflow.png")
+
+    st.image(image_path)
     st.markdown("""
 
     ####  1. Data Preparation (ETL)
